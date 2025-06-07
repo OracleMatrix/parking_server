@@ -3,6 +3,7 @@ const db = require("../models");
 const CheckinsModel = db.checkins;
 const ParkingsSlotModel = db.parkingsSlot;
 const VehiclesModel = db.vehicles;
+const {Op} = require("sequelize");
 
 class CheckinsController {
     async checkIn(req, res) {
@@ -40,6 +41,12 @@ class CheckinsController {
                 exitTime: null,
                 overStayFine: 0,
             });
+
+            await ParkingsSlotModel.update({isAvailable: false,}, {
+                where: {
+                    id: req.body.slotId,
+                }
+            })
 
             return res.status(201).send({checkin});
         } catch (error) {
@@ -82,6 +89,11 @@ class CheckinsController {
             checkin.overStayFine = overStayFine;
 
             await checkin.save();
+            await ParkingsSlotModel.update({isAvailable: true,}, {
+                where: {
+                    id: checkin.slotId,
+                }
+            })
 
             return res
                 .status(200)
