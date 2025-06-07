@@ -3,7 +3,6 @@ const db = require("../models");
 const CheckinsModel = db.checkins;
 const ParkingsSlotModel = db.parkingsSlot;
 const VehiclesModel = db.vehicles;
-const {Op} = require("sequelize");
 
 class CheckinsController {
     async checkIn(req, res) {
